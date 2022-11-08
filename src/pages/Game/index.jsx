@@ -1,5 +1,7 @@
+import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { io } from 'socket.io-client';
+import GameContainer from "./style";
 
 const socket = io('http://localhost:3001', {
     withCredentials: true,
@@ -10,25 +12,35 @@ const socket = io('http://localhost:3001', {
 
 const Game = () => {
     const { roomName, userName } = useParams();
-    const user = { userName, roomName}
+    const user = { userName, roomName }
+    const receiver = [];
 
-    socket.on('connect', () => {
-        socket.emit('enter_room', user);
-    })
+    useEffect(() => {
+        socket.on('connect', () => {
+            user.userSocketId = socket.id;
+            socket.emit('enter_room', user);
+        })
+    }, [])
 
-    socket.on('send_greet', message => {
-        console.log(message);
-    })
-
-    const getGreeting = () => {
-        socket.emit('greet', user);
+    const sendGreeting = () => {
+        socket.emit('send_greeting', user);
     }
 
+    socket.on('receive_greeting', message => {
+        receiver.push(1);
+        console.log(receiver)
+    })
+
+
     return (
-        <div>
-            Gamee
-            <button onClick = {getGreeting}> Greet </button>
-        </div>
+        <GameContainer>
+            <h1 className = 'game-title'> Sala: {roomName} </h1>
+
+            <section className = 'players-info-container'>
+                <button onClick = {sendGreeting}> Greet </button>
+            </section>
+            
+        </GameContainer>
     )
 }
 
