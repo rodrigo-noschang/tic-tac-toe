@@ -35,6 +35,7 @@ const LandingPage = () => {
                     <label className = 'landing-page-form-label' htmlFor = 'user-name'> Nome: </label>
                     <input id = 'user-name' 
                         placeholder = 'Seu nome'
+                        autoFocus
                         className = 'landing-page-form-input'/>
                 </div>
             </header>

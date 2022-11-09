@@ -15,11 +15,12 @@ const Game = () => {
     const user = { userName, roomName }
     const receiver = [];
 
-    useEffect(() => {
-        socket.on('connect', () => {
-            user.userSocketId = socket.id;
-            socket.emit('enter_room', user);
-        })
+    useEffect(() => { 
+        user.userSocketId = socket.id;
+        socket.emit('enter_room', user, response => {
+            console.log(response.message);
+        });
+        
     }, [])
 
     const sendGreeting = () => {
