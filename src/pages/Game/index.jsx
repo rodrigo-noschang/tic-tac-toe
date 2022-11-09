@@ -1,20 +1,20 @@
 import { useEffect, useState } from "react";
-import { findRenderedDOMComponentWithClass } from "react-dom/test-utils";
 import { useParams } from "react-router-dom";
 import GameContainer from "./style";
 
 const Game = ({ socket }) => {
-    const [room, setRoom] = useState({});
+    const [room, setRoom] = useState({
+        players: []
+    });
     const { roomName, userName } = useParams();
     const user = { userName, roomName }
 
     console.log(room);
 
     // Pega o nome do outro jogador baseado no array de players da sala, ou escreve "Aguardando"
-    const otherPlayer = room.players ?
-        room.players.length === 1 ? 'Aguardando outro jogador...' : 
-        room.players.find(player => player.userName !== user.userName).userName :
-        '';
+    const otherPlayer = room.players.length < 2 ? 
+        'Aguardando outro jogador...' : 
+        room.players.find(player => player.userName !== user.userName).userName;
 
     useEffect(() => {
         socket.emit('get_room_info', roomName);
