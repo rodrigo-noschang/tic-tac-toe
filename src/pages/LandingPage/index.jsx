@@ -17,11 +17,12 @@ const LandingPage = ({ socket }) => {
 
     const createRoom = evt => {
         evt.preventDefault();
-        let connectionSuccessfull = true;
         const userName = getUserName();
         const newRoomName = getRoomName();
 
-        if (userName.trim() && newRoomName.trim()) {            
+        console.log(userName, newRoomName);
+
+        if (userName && newRoomName) {            
             const user = {
                 userName: userName,
                 roomName: newRoomName,
@@ -30,7 +31,7 @@ const LandingPage = ({ socket }) => {
             
             socket.emit('enter_room', user, response => {
                 if (response.status === 'success') {
-                    navigate(`/game/${newRoomName}&${userName}}`)
+                    navigate(`/game/${newRoomName}&${userName}`)
                 } else {
                     setError(response.message);
                 }
