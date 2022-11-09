@@ -45,6 +45,7 @@ const LandingPageContainer = styled.div`
         margin: 30px 70px;
         border-top: 2px solid #fff;
         padding: 20px 0 0 50px;
+        width: fit-content;
     }
     
     .landing-page-section-title {
@@ -55,26 +56,14 @@ const LandingPageContainer = styled.div`
         padding-left: 55px;
     }
 
-    /* .landing-page-submit {
-        margin-left: 20px;
-        padding: 2px 15px;
-        background-color: var(--solid-blue);
-        box-shadow: 0 0 10px 2px var(--shadow-blue);
-        border: none;
-        border-radius: 2px;
+    .error-message {
+        text-align: center;
+        color: red;
+        font-size: 12px;
+        font-weight: 100;
+        font-style: italic;
+        margin-top: 8px;
     }
-
-    .landing-page-submit:hover {
-        cursor: pointer;
-        filter: brightness(1.15);
-        transition: .4s;
-    }
-
-    .landing-page-submit:active {
-        transform: scale(.95);
-        filter: brightness(.95);
-        transition: .3s;
-    } */
 `;
 
 export default LandingPageContainer

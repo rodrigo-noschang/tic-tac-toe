@@ -1,19 +1,50 @@
 import LandingPageContainer from "./style";
 import ActionButton from "../../components/ActionButton";
 import { useNavigate } from "react-router-dom";
+import { io } from 'socket.io-client';
+import { useState } from "react";
+
+const socket = io('http://localhost:3001', {
+    withCredentials: true,
+    extraHeaders: {
+        "checkers-header": "whatevs"
+    }
+});
 
 const LandingPage = () => {
+    const [error, setError] = useState('');
     const navigate = useNavigate();
 
     const getUserName = () => {
         return document.getElementById('user-name').value;
     }
 
+    const getRoomName = () => {
+        return document.getElementById('create-room').value;
+    }
+
     const createRoom = evt => {
         evt.preventDefault();
         const userName = getUserName();
-        const newRoomName = document.getElementById('create-room').value;
-        navigate(`/game/${newRoomName}&${userName}`)
+        const newRoomName = getRoomName();
+
+        console.log(userName, newRoomName);
+
+        if (userName.trim() && newRoomName.trim()) {            
+            const user = {
+                userName: userName,
+                roomName: newRoomName,
+                userSocketId: socket.id
+            }
+            
+            socket.emit('enter_room', user, response => {
+                if (response?.status === 'failed') {
+                    setError(response.message);
+                }
+            })
+        }
+
+        // navigate(`/game/${newRoomName}&${userName}`)
 
     }
 
@@ -50,21 +81,14 @@ const LandingPage = () => {
                         placeholder = 'Nome da sala'/>
                     <ActionButton> Criar </ActionButton>
                 </form>
+                
+                { error &&
+                    <div className = 'error-message'>
+                        {error}
+                    </div>
+                }
             </section>
 
-            <section className = 'landing-page-create-room-container'>
-                <h2 className = 'landing-page-section-title'>
-                    Entrar em sala já existente
-                </h2>
-                
-                <form className = 'landing-page-form-container'  onSubmit = {joinRoom}>
-                    <label className = 'landing-page-form-label' htmlFor = 'enter-room'> Nome da sala: </label>
-                    <input id = 'enter-room' 
-                        className = 'landing-page-form-input' 
-                        placeholder = 'Nome da sala'/>
-                    <ActionButton> Entrar </ActionButton>
-                </form>
-            </section>
 
 
         </LandingPageContainer>
