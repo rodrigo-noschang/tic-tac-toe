@@ -1,17 +1,9 @@
 import LandingPageContainer from "./style";
 import ActionButton from "../../components/ActionButton";
 import { useNavigate } from "react-router-dom";
-import { io } from 'socket.io-client';
 import { useState } from "react";
 
-const socket = io('http://localhost:3001', {
-    withCredentials: true,
-    extraHeaders: {
-        "checkers-header": "whatevs"
-    }
-});
-
-const LandingPage = () => {
+const LandingPage = ({ socket }) => {
     const [error, setError] = useState('');
     const navigate = useNavigate();
 
@@ -25,10 +17,9 @@ const LandingPage = () => {
 
     const createRoom = evt => {
         evt.preventDefault();
+        let connectionSuccessfull = true;
         const userName = getUserName();
         const newRoomName = getRoomName();
-
-        console.log(userName, newRoomName);
 
         if (userName.trim() && newRoomName.trim()) {            
             const user = {
@@ -38,19 +29,13 @@ const LandingPage = () => {
             }
             
             socket.emit('enter_room', user, response => {
-                if (response?.status === 'failed') {
+                if (response.status === 'success') {
+                    navigate(`/game/${newRoomName}&${userName}}`)
+                } else {
                     setError(response.message);
                 }
             })
         }
-
-        // navigate(`/game/${newRoomName}&${userName}`)
-
-    }
-
-    const joinRoom = evt => {
-        evt.preventDefault();
-        const userName = getUserName();
     }
 
     return (

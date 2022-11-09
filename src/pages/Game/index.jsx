@@ -1,19 +1,26 @@
-import { useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { io } from 'socket.io-client';
 import GameContainer from "./style";
 
-const Game = () => {
+const Game = ({ socket }) => {
     const { roomName, userName } = useParams();
     const user = { userName, roomName }
-    const receiver = [];
+    
+    const greet = () => {
+        socket.emit('send_greeting', user);
+    }
+
+    socket.on('receive_greeting', message => {
+        console.log(message);
+    })
+
+
 
     return (
         <GameContainer>
             <h1 className = 'game-title'> Sala: {roomName} </h1>
 
             <section className = 'players-info-container'>
-                <button> Greet </button>
+                <button onClick = {greet}> Greet </button>
             </section>
             
         </GameContainer>
