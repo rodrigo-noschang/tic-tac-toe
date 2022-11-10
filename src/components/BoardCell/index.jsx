@@ -3,6 +3,8 @@ import BoardCellContainer from "./style";
 const BoardCell = ({ line, column, value, boardMap, setBoardMap, user, room, setRoom, socket }) => {
 
     const chooseCell = () => {
+        if (room.players.length < 2) return;
+
         if (value === '' && room.turn === user.userName) {
             const updateData = {
                 line, 
@@ -26,7 +28,7 @@ const BoardCell = ({ line, column, value, boardMap, setBoardMap, user, room, set
     })
 
     return (
-        <BoardCellContainer line = {line} onClick = {chooseCell}>
+        <BoardCellContainer line = {line} onClick = {chooseCell} symbol = {value}>
             <div className = 'border-cell-content-container'>
                 {value}
             </div>

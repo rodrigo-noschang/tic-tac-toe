@@ -7,7 +7,13 @@ const BoardCellContainer = styled.div`
     display: flex;
 
     .border-cell-content-container {
-        flex-grow: 1
+        flex-grow: 1;
+        line-height: 150px;
+        text-align: center;
+        font-size: 95px;
+        font-weight: 300;
+        color: ${props => props.symbol === 'X' ? 'var(--solid-red)' : 'var(--solid-green)'};
+        text-shadow: 0 0 10px ${props => props.symbol === 'X' ? 'var(--shadow-red)' : 'var(--shadow-green)'}
     }
 
     .border-cell-divisory {
