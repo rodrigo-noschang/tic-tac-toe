@@ -9,10 +9,24 @@ const Board = ({ room, setRoom, socket, user }) => {
         ['', '', '']
     ]);
 
+    socket.on('receive_play', ({line, column, symbol}) => {
+        boardMap[line][column] = symbol;
+        setBoardMap([...boardMap]);
+    })
+
+    socket.on('receive_change_player', updatedRoom => {
+        setRoom(updatedRoom);
+    })
+
+    const checkForWin = (line, column) => {
+        console.log('Coordenadas -> ' ,line, column);
+    }
+
     return (
         <BoardContainer>
             { boardMap.map((line, lineNumber) => {
                 return (
+                    
                     // Maps through boardMap and create lines
                     <div key = {`line=${lineNumber}`} className = 'board-line-container'>
                         <div className = 'board-line'>
@@ -28,7 +42,8 @@ const Board = ({ room, setRoom, socket, user }) => {
                                         user = {user}
                                         room = {room}
                                         setRoom = {setRoom}
-                                        socket = {socket}/>
+                                        socket = {socket}
+                                        checkForWin = {checkForWin}/>
                                 )
                             })}
                         </div>
