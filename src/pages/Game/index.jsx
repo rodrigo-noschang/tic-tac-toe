@@ -1,10 +1,13 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import GameContainer from "./style";
+import Board from "../../components/Board";
+import { FaLongArrowAltRight } from 'react-icons/fa';
 
 const Game = ({ socket }) => {
     const [room, setRoom] = useState({
-        players: []
+        players: [],
+        turn: ''
     });
     const { roomName, userName } = useParams();
     const user = { userName, roomName }
@@ -33,19 +36,40 @@ const Game = ({ socket }) => {
     console.log(room);
 
     return (
-        <GameContainer>
+        <GameContainer playerTurn = {room.turn} user = {userName} otherPlayer = {otherPlayer}>
             <h1 className = 'game-title'> Sala: {roomName} </h1>
 
-            <section className = 'players-info-container'>
-                <div> {user.userName} </div>
-                <div> VS </div>
-                <div> {otherPlayer} </div>
-            </section>
+            <div className = 'game-container'>
+                <section className = 'players-info-container'>
+                    <div className = 'player-name user-name'>
+                        { room.turn === userName && 
+                            <span className = 'player-turn-arrow'>
+                                <FaLongArrowAltRight />      
+                            </span>
+                        }
+                        {user.userName} 
+                    </div>
+
+                    <div> VS </div>
+
+                    <div className = 'player-name other-player-name'>
+                        { room.turn === otherPlayer && 
+                            <span className = 'player-turn-arrow'>
+                                <FaLongArrowAltRight />      
+                            </span>
+                        }
+                        {otherPlayer} 
+                    </div>
+                </section>
+
+                <section className = 'game-board-container'>
+                    <Board />
+                </section>
+            </div>
 
             <button onClick = {changePlayersTurn} disabled = {room.turn !== userName}> 
                 Play 
-            </button>
-            
+            </button> 
         </GameContainer>
     )
 }
