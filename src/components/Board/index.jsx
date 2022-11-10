@@ -1,22 +1,34 @@
 import BoardContainer from "./style";
 import BoardCell from "../BoardCell";
+import { useState } from "react";
 
-const Board = () => {
-    const boardMap = [
+const Board = ({ room, setRoom, socket, user }) => {
+    const [boardMap, setBoardMap] = useState([
         ['', '', ''], 
         ['', '', ''],
         ['', '', '']
-    ];
+    ]);
 
     return (
         <BoardContainer>
             { boardMap.map((line, lineNumber) => {
                 return (
-                    <div className = 'board-line-container'>
+                    // Maps through boardMap and create lines
+                    <div key = {`line=${lineNumber}`} className = 'board-line-container'>
                         <div className = 'board-line'>
-                            { line.map((cell, cellColumn) => {
+                            { line.map((value, cellColumn) => {
                                 return (
-                                    <BoardCell line = {lineNumber} column = {cellColumn} value = {cell}/>
+                                    // Maps through the lines of boardMap and creates the cells
+                                    <BoardCell key = {`cell-${cellColumn}`} 
+                                        line = {lineNumber} 
+                                        column = {cellColumn}
+                                        value = {value}
+                                        boardMap = {boardMap}
+                                        setBoardMap = {setBoardMap}
+                                        user = {user}
+                                        room = {room}
+                                        setRoom = {setRoom}
+                                        socket = {socket}/>
                                 )
                             })}
                         </div>

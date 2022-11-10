@@ -10,30 +10,30 @@ const Game = ({ socket }) => {
         turn: ''
     });
     const { roomName, userName } = useParams();
-    const user = { userName, roomName }
+    const user = { userName, roomName };
 
-    // Pega o nome do outro jogador baseado no array de players da sala, ou escreve "Aguardando"
+    // Uses user index on the players list of the room to find his symbol.
+    // The first user to login will be on the first position of the players list and shall play with the X symbol
+    const symbols = ['X', 'O'];
+    const indexInRoom = room.players.findIndex(player => player.userName === user.userName);
+    user.boardSymbol = symbols[indexInRoom];
+    
+    // Get the name of the other player based on the array or just put a message of "waiting connection"
     const otherPlayer = room.players.length < 2 ? 
         'Aguardando outro jogador...' : 
         room.players.find(player => player.userName !== user.userName).userName;
 
     useEffect(() => {
         socket.emit('get_room_info', roomName);
+
+        return () => {
+            socket.off('disconnect');
+        }
     }, [])
     
     socket.on('receive_room_info', roomInfo => {
-        setRoom(roomInfo); 
+        setRoom(roomInfo);
     })
-
-    const changePlayersTurn = () => {
-        socket.emit('change_player', roomName);
-    }
-
-    socket.on('receive_change_player', updatedRoom => {
-        setRoom(updatedRoom);
-    })
-
-    console.log(room);
 
     return (
         <GameContainer playerTurn = {room.turn} user = {userName} otherPlayer = {otherPlayer}>
@@ -63,13 +63,16 @@ const Game = ({ socket }) => {
                 </section>
 
                 <section className = 'game-board-container'>
-                    <Board />
+                    <Board room = {room} 
+                        socket = {socket} 
+                        user = {user}
+                        setRoom = {setRoom}/>
                 </section>
             </div>
 
-            <button onClick = {changePlayersTurn} disabled = {room.turn !== userName}> 
+            {/* <button onClick = {changePlayersTurn} disabled = {room.turn !== userName}> 
                 Play 
-            </button> 
+            </button>  */}
         </GameContainer>
     )
 }
