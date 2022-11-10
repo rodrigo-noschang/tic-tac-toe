@@ -20,8 +20,6 @@ const LandingPage = ({ socket }) => {
         const userName = getUserName();
         const newRoomName = getRoomName();
 
-        console.log(userName, newRoomName);
-
         if (userName && newRoomName) {            
             const user = {
                 userName: userName,

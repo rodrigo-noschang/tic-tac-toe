@@ -9,8 +9,6 @@ const Game = ({ socket }) => {
     const { roomName, userName } = useParams();
     const user = { userName, roomName }
 
-    console.log(room);
-
     // Pega o nome do outro jogador baseado no array de players da sala, ou escreve "Aguardando"
     const otherPlayer = room.players.length < 2 ? 
         'Aguardando outro jogador...' : 
@@ -18,12 +16,21 @@ const Game = ({ socket }) => {
 
     useEffect(() => {
         socket.emit('get_room_info', roomName);
-
     }, [])
     
     socket.on('receive_room_info', roomInfo => {
         setRoom(roomInfo); 
     })
+
+    const changePlayersTurn = () => {
+        socket.emit('change_player', roomName);
+    }
+
+    socket.on('receive_change_player', updatedRoom => {
+        setRoom(updatedRoom);
+    })
+
+    console.log(room);
 
     return (
         <GameContainer>
@@ -34,6 +41,10 @@ const Game = ({ socket }) => {
                 <div> VS </div>
                 <div> {otherPlayer} </div>
             </section>
+
+            <button onClick = {changePlayersTurn} disabled = {room.turn !== userName}> 
+                Play 
+            </button>
             
         </GameContainer>
     )
