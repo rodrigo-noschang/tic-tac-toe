@@ -2,25 +2,36 @@ import BoardContainer from "./style";
 import BoardCell from "../BoardCell";
 import { useState } from "react";
 
-const Board = ({ room, setRoom, socket, user }) => {
+const Board = ({room, socket}) => {
     const [boardMap, setBoardMap] = useState([
         ['', '', ''], 
         ['', '', ''],
         ['', '', '']
     ]);
 
-    socket.on('receive_play', ({line, column, symbol}) => {
-        boardMap[line][column] = symbol;
-        setBoardMap([...boardMap]);
-    })
-
-    socket.on('receive_change_player', updatedRoom => {
-        setRoom(updatedRoom);
-    })
-
-    const checkForWin = (line, column) => {
-        console.log('Coordenadas -> ' ,line, column);
+    const boardSymbols = {
+        player1: 'X',
+        player2: 'O'
     }
+
+    const updateBoard = (chosenLine, chosenColumn) => {
+        // Only accepts the play if it is that players turn and that cell is empty
+        if (room.turn !== socket.id || boardMap[chosenLine][chosenColumn] !== '') return;
+
+        const currentPlayer = room.turn === room.player1.userSocketId ? 
+            'player1' : 'player2';
+
+        const symbol = boardSymbols[currentPlayer];
+        boardMap[chosenLine][chosenColumn] = symbol;
+        
+        // Send an event to update the boardRoom and another to change the players turn
+        socket.emit('register_new_board', room.roomName, boardMap);
+        socket.emit('change_turn', room.roomName, currentPlayer)
+    }
+
+    socket.on('receive_register_new_board', updatedBoard => {
+        setBoardMap(updatedBoard);
+    })
 
     return (
         <BoardContainer>
@@ -36,14 +47,8 @@ const Board = ({ room, setRoom, socket, user }) => {
                                     <BoardCell key = {`cell-${cellColumn}`} 
                                         line = {lineNumber} 
                                         column = {cellColumn}
-                                        value = {value}
-                                        boardMap = {boardMap}
-                                        setBoardMap = {setBoardMap}
-                                        user = {user}
-                                        room = {room}
-                                        setRoom = {setRoom}
-                                        socket = {socket}
-                                        checkForWin = {checkForWin}/>
+                                        value = {value} 
+                                        updateBoard = {updateBoard} />
                                 )
                             })}
                         </div>

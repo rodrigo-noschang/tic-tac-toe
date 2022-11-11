@@ -8,30 +8,6 @@ const Game = ({ socket }) => {
     const [room, setRoom] = useState({});
     const { roomName, userName } = useParams();
 
-    const getMe = () => {
-        if (room.player1) {
-            if (room.player1.userName === userName) {
-                return {...room.player1, position: 'player1'};
-            }
-            return {...room.player2, position: 'player2'};
-        } else {
-            return {...room.player2, positoin: 'player2'};
-        }
-    }
-
-    const getAdversary = () => {
-        if (room.player1) {
-            if (room.player1.userName !== userName) {
-                return {...room.player1, position: 'player1'};
-            } else if (room.player2) {
-                return {...room.player2, position: 'player2'};
-            } 
-        }
-    }
-
-    const me = getMe();
-    const adversary = getAdversary();
-
     useEffect(() => {
         socket.emit('get_room_info', roomName);
 
@@ -42,22 +18,27 @@ const Game = ({ socket }) => {
 
     socket.on('receive_get_room_info', (roomInfo) => {
         setRoom(roomInfo);
-    
     })
 
     return (
-        <GameContainer playerTurn = {room.turn} user = {userName} >
+        <GameContainer playerTurn = {room.turn} player1 = {room.player1?.userSocketId || ''} player2 = {room.player2?.userSocketId || ''}>
             <h1 className = 'game-title'> Sala: {roomName} </h1>
 
             <div className = 'game-container'>
                 <section className = 'players-info-container'>
 
-                    <div className = 'player-name user-name'>
-                        <span className = 'player-turn-arrow'>
-                            <FaLongArrowAltRight />      
-                        </span>
+                    <div className = 'player-name player-1-name'>
                         { room.player1 ?
-                            room.player1.userName 
+                        <>
+                            { room.turn === room.player1.userSocketId &&
+                                <span className = 'player-turn-arrow'>
+                                    <FaLongArrowAltRight />      
+                                </span>
+                            }
+                            <span> 
+                                {room.player1.userName} 
+                            </span>
+                        </>
                         :
                             'Aguardando Jogador...'
                         }
@@ -66,25 +47,29 @@ const Game = ({ socket }) => {
 
                     <div> VS </div>
 
-                    <div className = 'player-name other-player-name'>
-                        <span className = 'player-turn-arrow'>
-                            <FaLongArrowAltRight />      
-                        </span>
+                    <div className = 'player-name player-2-name'>
+                        
                         {room.player2 ?
-                            room.player2.userName
+                            <>
+                            { room.turn === room.player2.userSocketId &&
+                                <span className = 'player-turn-arrow'>
+                                    <FaLongArrowAltRight />      
+                                </span>
+                            }
+                            <span> { room.player2.userName } </span>
+                            </>
                         :
                             'Aguardando Jogador...'
                         }    
                     
                     </div>
                 </section>
-
-                {/* <section className = 'game-board-container'>
-                    <Board room = {room} 
-                        socket = {socket} 
-                        user = {user}
-                        setRoom = {setRoom}/>
-                </section> */}
+                
+                { room.player2 &&
+                    <section className = 'game-board-container'>
+                        <Board room = {room} socket = {socket}/>
+                    </section>
+                }
             </div>
 
             {/* <button onClick = {changePlayersTurn} disabled = {room.turn !== userName}> 

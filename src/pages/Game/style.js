@@ -16,16 +16,16 @@ const GameContainer = styled.div`
         margin-right: 15px;
     }
 
-    .user-name {
+    .player-1-name {
         color: var(--solid-red);
         text-shadow: 0 0 10px var(--shadow-red);
-        font-size: ${props => props.playerTurn === props.user ? '38px' : '28px'};
+        font-size: ${props => props.playerTurn === props.player1 ? '38px' : '28px'};
     }
 
-    .other-player-name {
+    .player-2-name {
         color: var(--solid-green);
         text-shadow: 0 0 10px var(--shadow-green);
-        font-size: ${props => props.playerTurn === props.otherPlayer ? '38px' : '28px'};
+        font-size: ${props => props.playerTurn === props.player2 ? '38px' : '28px'};
     }
 
     .game-container {

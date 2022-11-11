@@ -1,32 +1,14 @@
 import BoardCellContainer from "./style";
 
-const BoardCell = ({ line, column, value, boardMap, setBoardMap, user, room, setRoom, socket, checkForWin }) => {
+const BoardCell = ({ line, column, value, updateBoard }) => {
 
-    const chooseCell = () => {
-        // Waits for other player to join so that the game can be played
-        if (room.players.length < 2) return;
-
-        // If cell was already selected, or if the player is playing out of turn, 
-        // the cell won't be selected.
-        if (value !== '' || room.turn !== user.userName)  return
-        
-        const updateData = {
-            line, 
-            column, 
-            roomName: room.roomName, 
-            symbol: user.boardSymbol
-        }
-
-        boardMap[line][column] = user.boardSymbol;
-
-        checkForWin(line, column);
-
-        socket.emit('register_play', updateData);
-        socket.emit('change_player', room.roomName);
+    const markCell = () => {
+        updateBoard(line, column);
     }
 
+    console.log('Renderizou');
     return (
-        <BoardCellContainer line = {line} onClick = {chooseCell} symbol = {value}>
+        <BoardCellContainer line = {line} symbol = {value} onClick = {markCell}>
             <div className = 'border-cell-content-container'>
                 {value}
             </div>
