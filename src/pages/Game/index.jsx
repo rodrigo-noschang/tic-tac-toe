@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import GameContainer from "./style";
 import Board from "../../components/Board";
 import { FaLongArrowAltRight } from 'react-icons/fa';
@@ -7,8 +7,10 @@ import { FaLongArrowAltRight } from 'react-icons/fa';
 const Game = ({ socket }) => {
     const [room, setRoom] = useState({});
     const { roomName, userName } = useParams();
+    const navigate = useNavigate();
 
     useEffect(() => {
+        socket.emit('is_user_connected_correctly');
         socket.emit('get_room_info', roomName);
 
         return () => {
@@ -18,6 +20,12 @@ const Game = ({ socket }) => {
 
     socket.on('receive_get_room_info', (roomInfo) => {
         setRoom(roomInfo);
+    })
+
+    socket.on('receive_is_user_connected_correctly', userFound => {
+        if (!userFound) {
+            navigate('/');
+        }
     })
 
     return (

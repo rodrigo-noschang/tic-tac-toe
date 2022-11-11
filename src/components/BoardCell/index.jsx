@@ -6,7 +6,6 @@ const BoardCell = ({ line, column, value, updateBoard }) => {
         updateBoard(line, column);
     }
 
-    console.log('Renderizou');
     return (
         <BoardCellContainer line = {line} symbol = {value} onClick = {markCell}>
             <div className = 'border-cell-content-container'>
