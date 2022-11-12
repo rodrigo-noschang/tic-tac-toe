@@ -17,7 +17,7 @@ const Board = ({room, socket}) => {
     const updateBoard = (chosenLine, chosenColumn) => {
         // Only accepts the play if it is that players turn and that cell is empty
         if (room.turn !== socket.id || boardMap[chosenLine][chosenColumn] !== '') return;
-
+    
         const currentPlayer = room.turn === room.player1.userSocketId ? 
             'player1' : 'player2';
 
@@ -25,12 +25,15 @@ const Board = ({room, socket}) => {
         boardMap[chosenLine][chosenColumn] = symbol;
         
         // Send an event to update the boardRoom and another to change the players turn
-        socket.emit('register_new_board', room.roomName, boardMap);
-        socket.emit('change_turn', room.roomName, currentPlayer)
+        socket.emit('register_new_board_and_check_for_win', room.roomName, boardMap, chosenLine, chosenColumn);
+        socket.emit('change_turn', room.roomName, currentPlayer);
     }
 
-    socket.on('receive_register_new_board', updatedBoard => {
+    socket.on('receive_register_new_board_and_check_for_win', (updatedBoard, win, winner) => {
         setBoardMap(updatedBoard);
+        if (win) {
+            console.log(`${winner.userName} ganhou`);
+        }
     })
 
     return (

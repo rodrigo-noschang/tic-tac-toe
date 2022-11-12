@@ -28,6 +28,16 @@ const Game = ({ socket }) => {
         }
     })
 
+    const resetGame = () => {
+        const resetedMap = [
+            ['', '', ''],
+            ['', '', ''],
+            ['', '', '']
+        ]
+        
+        socket.emit('register_new_board_and_check_for_win', roomName, resetedMap);
+    }
+
     return (
         <GameContainer playerTurn = {room.turn} player1 = {room.player1?.userSocketId || ''} player2 = {room.player2?.userSocketId || ''}>
             <h1 className = 'game-title'> Sala: {roomName} </h1>
@@ -52,9 +62,7 @@ const Game = ({ socket }) => {
                         }
                         
                     </div>
-
                     <div> VS </div>
-
                     <div className = 'player-name player-2-name'>
                         
                         {room.player2 ?
@@ -71,6 +79,8 @@ const Game = ({ socket }) => {
                         }    
                     
                     </div>
+                
+                    <button onClick = {resetGame}> Reset Game </button>
                 </section>
                 
                 { room.player2 &&
