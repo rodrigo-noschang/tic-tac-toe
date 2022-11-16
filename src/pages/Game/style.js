@@ -3,6 +3,10 @@ import styled from "styled-components";
 const GameContainer = styled.div`
     color: #fff;
 
+    .game-header {
+        
+    }
+
     .game-title {
         text-align: center;
         margin: 25px 35px;
