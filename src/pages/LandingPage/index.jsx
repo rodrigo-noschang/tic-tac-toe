@@ -4,6 +4,10 @@ import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 
 const LandingPage = ({ socket }) => {
+    if (!socket.connected) {
+        socket.connect();
+    }
+    
     const [error, setError] = useState('');
     const navigate = useNavigate();
 

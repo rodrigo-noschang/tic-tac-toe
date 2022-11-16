@@ -22,7 +22,6 @@ const GlobalStyle = createGlobalStyle`
 
     body {
         background-color: var(--background-black);
-        min-height: 100vh;
     }
 `;
 

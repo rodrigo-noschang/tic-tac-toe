@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import GameContainer from "./style";
 import Board from "../../components/Board";
-import { FaLongArrowAltRight } from 'react-icons/fa';
+import { FaLongArrowAltRight, FaArrowLeft } from 'react-icons/fa';
 
 const Game = ({ socket }) => {
     const [room, setRoom] = useState({});
@@ -19,6 +19,11 @@ const Game = ({ socket }) => {
             socket.off('disconnect');
         }
     }, [])
+
+    const disconnectPlayer = () => {
+        socket.disconnect();
+        navigate('/');
+    }
 
     socket.on('receive_get_room_info', (roomInfo) => {
         setRoom(roomInfo);
@@ -37,6 +42,7 @@ const Game = ({ socket }) => {
             winner = {winner.userSocketId} >
             
             <header className = 'game-header'>
+                <FaArrowLeft className = 'game-header-return-icon' onClick = {disconnectPlayer}/>
                 <h1 className = 'game-title'> Sala: {roomName} </h1>
             </header>
 

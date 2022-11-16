@@ -4,7 +4,26 @@ const GameContainer = styled.div`
     color: #fff;
 
     .game-header {
-        
+        position: relative;
+    }
+
+    .game-header-return-icon {
+        position: absolute;
+        top: 5px;
+        left: 15px;
+        font-size: 20px;
+        transition: .2s;
+    }
+
+    .game-header-return-icon:hover {
+        cursor: pointer;
+        transform: scale(1.1);
+        transition: .2s;
+    }
+
+    .game-header-return-icon:active {
+        transform: scale(.9);
+        transition: .2s;
     }
 
     .game-title {
