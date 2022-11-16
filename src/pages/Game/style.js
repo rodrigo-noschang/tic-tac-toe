@@ -32,6 +32,13 @@ const GameContainer = styled.div`
         font-size: ${props => props.playerTurn === props.player2 ? '38px' : '28px'};
     }
 
+    .player-info-identifyer {
+        color: #8f8fa5;
+        font-size: 21px;
+        margin-left: 10px;
+        font-style: italic;
+    }
+
     .game-container {
         display: flex;
         justify-content: space-between;

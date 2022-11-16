@@ -2,7 +2,7 @@ import { BoardContainer, ResetButton } from "./style";
 import BoardCell from "../BoardCell";
 import { useState } from "react";
 
-const Board = ({room, socket, winner, setWinner}) => {
+const Board = ({room, setRoom, socket, winner, setWinner, draw, setDraw}) => {
     const [boardMap, setBoardMap] = useState([
         ['', '', ''], 
         ['', '', ''],
@@ -15,13 +15,9 @@ const Board = ({room, socket, winner, setWinner}) => {
     }
 
     const resetGame = () => {
-        const resetedMap = [
-            ['', '', ''],
-            ['', '', ''],
-            ['', '', '']
-        ]
         room.turn = room.player1.userSocketId;
-        socket.emit('register_new_board_and_check_for_win', room.roomName, resetedMap);
+        setRoom({...room});
+        socket.emit('reset_game', room.roomName);
     }
 
     const updateBoard = (chosenLine, chosenColumn) => {
@@ -36,15 +32,25 @@ const Board = ({room, socket, winner, setWinner}) => {
         boardMap[chosenLine][chosenColumn] = symbol;
         
         // Send an event to update the boardRoom and another to change the players turn
-        socket.emit('register_new_board_and_check_for_win', room.roomName, boardMap, chosenLine, chosenColumn);
+        socket.emit('register_new_board_and_check_for_endgame', room.roomName, boardMap, chosenLine, chosenColumn);
         socket.emit('change_turn', room.roomName, currentPlayer);
     }
 
-    socket.on('receive_register_new_board_and_check_for_win', (updatedBoard, win, winnerPlayer) => {
+    socket.on('receive_register_new_board_and_check_for_endgame', (updatedBoard, win, winnerPlayer, draw) => {
         setBoardMap(updatedBoard);
         if (win) {
             setWinner(winnerPlayer);
         }
+        if (!win) {
+            setDraw(draw);
+        }
+    })
+
+    socket.on('receive_reset_game', (resetedRoom, resetedBoard) => {
+        setRoom(resetedRoom);
+        setBoardMap(resetedBoard);
+        setWinner('');
+        setDraw(false);
     })
 
     return (
@@ -76,7 +82,9 @@ const Board = ({room, socket, winner, setWinner}) => {
 
             </BoardContainer>
         
-            <ResetButton onClick = {resetGame}> Resetar </ResetButton>
+            { (winner || draw) &&
+                <ResetButton onClick = {resetGame}> Reiniciar Jogo </ResetButton>
+            }
         </>
     )
 
