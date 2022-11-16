@@ -6,6 +6,7 @@ import { FaLongArrowAltRight } from 'react-icons/fa';
 
 const Game = ({ socket }) => {
     const [room, setRoom] = useState({});
+    const [ winner, setWinner ] = useState('');
     const { roomName, userName } = useParams();
     const navigate = useNavigate();
 
@@ -28,18 +29,11 @@ const Game = ({ socket }) => {
         }
     })
 
-    const resetGame = () => {
-        const resetedMap = [
-            ['', '', ''],
-            ['', '', ''],
-            ['', '', '']
-        ]
-        
-        socket.emit('register_new_board_and_check_for_win', roomName, resetedMap);
-    }
-
     return (
-        <GameContainer playerTurn = {room.turn} player1 = {room.player1?.userSocketId || ''} player2 = {room.player2?.userSocketId || ''}>
+        <GameContainer playerTurn = {room.turn} 
+            player1 = {room.player1?.userSocketId || ''} 
+            player2 = {room.player2?.userSocketId || ''} 
+            winner = {winner.userSocketId} >
             <h1 className = 'game-title'> Sala: {roomName} </h1>
 
             <div className = 'game-container'>
@@ -79,20 +73,23 @@ const Game = ({ socket }) => {
                         }    
                     
                     </div>
-                
-                    <button onClick = {resetGame}> Reset Game </button>
+
+                    { winner && 
+                        <div className = 'game-result-container'>
+                            <span className = 'game-result-winner-name'> { winner.userName } </span> venceu!
+                        </div>
+                    }
                 </section>
                 
                 { room.player2 &&
                     <section className = 'game-board-container'>
-                        <Board room = {room} socket = {socket}/>
+                        <Board room = {room} 
+                            socket = {socket} 
+                            winner = {winner}
+                            setWinner = {setWinner}/>
                     </section>
                 }
             </div>
-
-            {/* <button onClick = {changePlayersTurn} disabled = {room.turn !== userName}> 
-                Play 
-            </button>  */}
         </GameContainer>
     )
 }
