@@ -4,7 +4,7 @@ import Game from '../pages/Game';
 import { io } from 'socket.io-client';
 
 export const connectUser = () => {
-    const socket = io('http://localhost:3001', {
+    const socket = io(process.env.REACT_APP_SOCKET_URL, {
         withCredentials: true,
         extraHeaders: {
             "checkers-header": "whatevs"
