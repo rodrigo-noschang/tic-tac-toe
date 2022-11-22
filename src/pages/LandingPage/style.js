@@ -59,8 +59,8 @@ const LandingPageContainer = styled.div`
     .error-message {
         text-align: center;
         color: red;
-        font-size: 12px;
-        font-weight: 100;
+        font-size: 18px;
+        font-weight: 300;
         font-style: italic;
         margin-top: 8px;
     }
