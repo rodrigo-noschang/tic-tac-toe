@@ -60,14 +60,14 @@ const LandingPage = ({ socket }) => {
             </header>
 
             <section className = 'landing-page-create-room-container'>
-                <h2 className = 'landing-page-section-title'> Criar Sala </h2>
+                <h2 className = 'landing-page-section-title'> Crie ou entre em uma sala </h2>
                 
                 <form className = 'landing-page-form-container' onSubmit = {createRoom}>
-                    <label className = 'landing-page-form-label' htmlFor = 'create-room'> Nomeie sua sala: </label>
+                    <label className = 'landing-page-form-label' htmlFor = 'create-room'> Sala: </label>
                     <input id = 'create-room' 
                         className = 'landing-page-form-input' 
                         placeholder = 'Nome da sala'/>
-                    <ActionButton> Criar </ActionButton>
+                    <ActionButton> Jogar </ActionButton>
                 </form>
                 
                 { error &&

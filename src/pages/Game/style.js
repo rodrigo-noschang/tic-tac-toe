@@ -1,6 +1,16 @@
 import styled from "styled-components";
 
-const GameContainer = styled.div`
+export const LoadingContainer = styled.div`
+    color: var(--solid-blue);
+    font-size: 22px;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+`;
+
+export const GameContainer = styled.div`
     color: #fff;
 
     .game-header {
@@ -89,5 +99,3 @@ const GameContainer = styled.div`
             'var(--solid-red)' : 'var(--solid-green)'};
     }
 `;
-
-export default GameContainer;

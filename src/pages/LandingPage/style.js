@@ -42,7 +42,7 @@ const LandingPageContainer = styled.div`
     }
 
     .landing-page-create-room-container {
-        margin: 30px 70px;
+        margin: 30px auto;
         border-top: 2px solid #fff;
         padding: 20px 0 0 50px;
         width: fit-content;

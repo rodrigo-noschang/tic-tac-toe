@@ -5,7 +5,7 @@ import { io } from 'socket.io-client';
 
 export const connectUser = () => {
     const socket = io(process.env.REACT_APP_SOCKET_URL, {
-        transports: ['websocket'],
+        transports: ['websocket', 'polling', 'flashsocket'],
         withCredentials: true,
         extraHeaders: {
             "checkers-header": "whatevs"
